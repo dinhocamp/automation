@@ -1,0 +1,15 @@
+---
+- name: Get all virtual machines
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Gather VM information
+      vmware_vm_info:
+        hostname: "{{ inventory_hostname }}"
+        delegate_to: localhost
+        vm_type: vm
+      register: vm_info
+
+    - name: Display virtual machines
+      debug:
+        var: vm_info.virtual_machines

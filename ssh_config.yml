@@ -1,0 +1,24 @@
+---
+- name: Connect to remote machine via SSH with a specific username and password
+  hosts: openstack
+  gather_facts: no
+
+  vars:
+    ssh_username: cloud-admin
+    ssh_password: openstack
+    ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
+
+  tasks:
+    - name: Check connectivity
+      ansible.builtin.ping:
+      delegate_to: localhost
+      become: no
+    - name: Run command
+      ansible.builtin.shell:
+        cmd: pwd
+      register: command_output
+
+    - name: Display command output
+      ansible.builtin.debug:
+        var: command_output.stdout
+
