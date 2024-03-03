@@ -42,6 +42,12 @@ then
 		if test $check_ans -eq 0 
 		then
 			unset check_ans
+			res=`ssh -o "StrictHostKeyChecking=no" cloud-admin@openstack "git --version" &>/dev/null | grep -o '\d+\.\d+\.\d+'`	
+			echo "result is "
+			if test "$res" == "" 
+			then
+			ssh -o "StrictHostKeyChecking=no" cloud-admin@openstack "sudo apt-get install git"
+			fi
 			check_ans=`find /home/dinho/.ssh -type f -name "id_rsa.pub" | grep -o 'No such file'`
 			if test "$check_ans" == "No such file"
 			then
@@ -49,10 +55,11 @@ then
 			ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub cloud-admin@openstack		
 			else
 			ansible-playbook -i inventory ssh_config.yml
-			ansible-playbook -i inventory create_stack_user.yml
-						
+			ansible-playbook -i inventory create_stack_user.yml			
+			ansible-playbook -i inventory devstack_installation.yml
 			fi
 			#check for sshpass is already installed
+			#check if git is installed on the remote machine
 		else
 			echo openstack is installed
 		fi

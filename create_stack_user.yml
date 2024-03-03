@@ -14,17 +14,3 @@
         state: present
         regexp: stack
         line: "stack ALL=(ALL) NOPASSWD: ALL"
-    - name: Clone a github repository
-      git:
-        repo: https://github.com/openstack/devstack.git
-        dest: /home/stack
-        clone: yes
-        update: yes
-    - name: Execute shell script
-      ansible.builtin.shell: /home/stack/devstack/setup_devstack.sh
-      become: true
-      become_user: stack
-    - name: Debug ansible_become_pass
-      ansible.builtin.debug:
-        msg: "ansible_become_pass is {{ ansible_become_pass }}"
-
