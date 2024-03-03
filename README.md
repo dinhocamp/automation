@@ -1,0 +1,2 @@
+# automation
+perform cloud automation
