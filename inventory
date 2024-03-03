@@ -1,9 +1,11 @@
 [ansible_server]
-ansible_engine ansible_host=localhost
+ansible_engine 
+ansible_host=localhost
 [host_server]
-openstack ansible_host=192.168.1.17
+openstack 
+ansible_host=192.168.1.17
 [host_server:vars]
 ansible_user=cloud-admin
 ansible_connection=ssh
 ansible_ssh_private_key=~/.ssh/id_rsa.pub
-inventory_hostname=localhost
+#inventory_hostname=localhost

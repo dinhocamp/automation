@@ -5,8 +5,8 @@
 
   vars:
     ssh_username: cloud-admin
-    ssh_password: openstack
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
+    ansible_become_pass: openstack
 
   tasks:
     - name: Check connectivity
@@ -21,4 +21,20 @@
     - name: Display command output
       ansible.builtin.debug:
         var: command_output.stdout
+    - name: Create stack user
+      become: yes
+      become_method: sudo
+      remote_user: cloud_admin
+      ansible.builtin.user:
+        name: stack
+        state: present
+    - name: Allow 'stack' user to have passwordless sudo access
+      become: yes
+      become_method: sudo
+      remote_user: cloud_admin
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: stack
+        line: "cloud-admin ALL=(ALL) NOPASSWD: ALL"
 

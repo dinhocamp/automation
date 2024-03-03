@@ -49,7 +49,8 @@ then
 			ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub cloud-admin@openstack		
 			else
 			ansible-playbook -i inventory ssh_config.yml
-			ansible-playbook -i inventory create_stack_user.yml			
+			ansible-playbook -i inventory create_stack_user.yml
+						
 			fi
 			#check for sshpass is already installed
 		else
