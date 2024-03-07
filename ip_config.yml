@@ -1,0 +1,24 @@
+---
+- name: OpenStack vm static ip config
+  hosts: openstack
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  tasks:
+    - name: static ip address configuration
+      ansible.builtin.shell: |
+        cat << EOF > /etc/netplan/01-network-manager-all.yaml
+        network:
+          version: 2
+          renderer: networkd
+          ethernets:
+            ens33:
+              dhcp4: no
+              addresses: [192.168.1.100/24]
+              gateway4: 192.168.1.1
+              nameservers:
+                addresses: [8.8.8.8, 8.8.4.4]
+        EOF
+        netplan apply
+      
+      

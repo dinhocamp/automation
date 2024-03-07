@@ -36,8 +36,6 @@ done
 if [ $a == 'y' ]
 then
 	echo "checking if openstack already installed ..."
-	#if test "$SUDO_USER" == 'dinho'
-	#then
 		check_ans=`dpkg -l | grep openstack | wc -l`
 		if test $check_ans -eq 0 
 		then
@@ -63,9 +61,6 @@ then
 		else
 			echo openstack is installed
 		fi
-	#else
-		#echo this script needs root privileges
-	#fi
 elif [ $a == 'n' ]
 then
 	echo aborting ...

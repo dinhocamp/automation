@@ -3,7 +3,7 @@ ansible_engine
 ansible_host=localhost
 [host_server]
 openstack 
-ansible_host=192.168.1.17
+ansible_host=192.168.1.100
 [host_server:vars]
 ansible_user=cloud-admin
 ansible_connection=ssh

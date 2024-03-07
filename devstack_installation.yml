@@ -7,7 +7,7 @@
     - name: Clone openstack repo
       ansible.builtin.shell: 'git clone https://github.com/openstack/devstack.git /home/cloud-admin/devstack'
     - name: Execute shell script
-      ansible.builtin.shell: /home/cloud-admin/devstack/stack.sh
+      ansible.builtin.shell: 'bash /home/cloud-admin/devstack/stack.sh'
     - name: Debug ansible_become_pass
       ansible.builtin.debug:
         msg: "ansible_become_pass is root"
