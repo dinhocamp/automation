@@ -1,0 +1,38 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: OpenStack
+    password: "$6$cwrYCFwEYRxT1qnO$7uRAiN6sQnH2Z.7.jNkOxn8p/aO2N.6JWKIl8Un8T.TczOHaw5MFQnA/ublY/e1nISj6Yuht7tfByVwrCv9411"
+    username: cloud-admin
+  kernel: 
+    package: linux-generic
+  keyboard: 
+    layout: us
+    toggle: null
+    variant: ''  
+  locale: en_US.UTF-8
+  ssh: 
+    allow-pw: true
+    install-server: true
+  timezone: UTC
+  packages:
+    - openssh-server
+  network:
+      version: 2
+      ethernets:
+        ens33:
+          addresses: [192.168.58.240/24]
+          gateway4: 192.168.58.60
+          nameservers:
+          addresses: [8.8.8.8]
+          dhcp4: no
+  ssh:
+        install-server: yes
+        allow-pw: yes
+  late-commands:
+    - echo 'PermitRootLogin yes' >> /etc/ssh/ssh_config
+    - echo 'PasswordAuthentication yes' >> /etc/ssh/ssh_config
+    - echo 'Port 22' >> /etc/ssh/ssh_config
+    - systemctl restart ssh
+  reboot: true

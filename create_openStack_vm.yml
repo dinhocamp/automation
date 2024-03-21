@@ -1,0 +1,25 @@
+---
+- name: openstack shit
+  hosts: localhost
+  tasks:
+    - name: addrressing 
+      openstack.cloud.address_scope:
+        cloud: mycloud
+        state: present
+        name: my_adress_scope
+
+# Create a shared IPv6 address scope for a given project.
+    - name: addrressing
+      openstack.cloud.address_scope:
+        cloud: mycloud
+        state: present
+        ip_version: 6
+        name: ipv6_address_scope
+        project: myproj
+
+# Delete address scope.
+    - name: addrressing 
+      openstack.cloud.address_scope:
+        cloud: mycloud
+        state: absent
+        name: my_adress_scope

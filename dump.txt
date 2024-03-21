@@ -1,0 +1,251 @@
+#!/bin/bash
+
+NVM="openstack-vm"      
+NVMDIR="openstack-vm"  
+NVMOS="ubuntu-22.04.2-desktop-amd64"   
+NVMSIZE="60g"          
+VMMEMSIZE="8192"       
+STATIC_IP="192.168.58.90"
+NETMASK="255.255.255.0"
+DNS_SERVER="8.8.8.8"
+ISO_FILE="/vmfs/volumes/datastore1/ubuntu-22.04.2-desktop-amd64.iso"
+
+# Create the directory for the virtual machine
+mkdir -p "/vmfs/volumes/datastore1/$NVMDIR"
+
+# Create and allocate the virtual disk
+vmkfstools -c "$NVMSIZE" -d thin "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmdk"
+
+# Open file handle and write VMX configuration
+exec >"/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmx"
+
+# Write the VMX configuration
+cat <<EOF
+config.version = "8"
+virtualHW.version = "13"
+memsize = "$VMMEMSIZE"
+displayName = "$NVM"
+guestOS = "$NVMOS"
+ide0:0.present = "TRUE"
+ide0:0.deviceType = "cdrom-raw"
+ide:0.startConnected = "false"
+floppy0.startConnected = "FALSE"
+floppy0.fileName = "/dev/fd0"
+ide0:0.fileName = "$ISO_FILE"
+Ethernet0.present = "TRUE"
+Ethernet0.networkName = "VM Network"
+Ethernet0.addressType = "static"
+Ethernet0.address = "$STATIC_IP"
+Ethernet0.netmask = "$NETMASK"
+Ethernet0.gateway = ""
+Ethernet0.dns = "$DNS_SERVER"
+scsi0.present = "true"
+scsi0.sharedBus = "none"
+scsi0.virtualDev = "lsilogic"
+scsi0:0.present = "true"
+scsi0:0.fileName = "$NVM.vmdk"
+scsi0:0.deviceType = "scsi-hardDisk"
+EOF
+
+# Register the virtual machine
+vim-cmd solo/registervm "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmx"
+prevoius attempt 
+////////////////////////////
+#!/bin/bash
+
+NVM="openstack-vm"      
+NVMDIR="openstack-vm"  
+NVMOS="ubuntu-22.04.2-desktop-amd64"   
+NVMSIZE="60g"          
+VMMEMSIZE="8192"       
+STATIC_IP="192.168.58.90"
+NETMASK="255.255.255.0"
+DNS_SERVER="8.8.8.8"
+ISO_FILE="/vmfs/volumes/datastore1/ubuntu-22.04.2-desktop-amd64.iso"
+
+# Create the directory for the virtual machine
+mkdir -p "/vmfs/volumes/datastore1/$NVMDIR"
+
+# Create and allocate the virtual disk
+vmkfstools -c "$NVMSIZE" -d thin "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmdk"
+
+# Open file handle and write VMX configuration
+exec >"/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmx"
+
+# Write the VMX configuration
+cat <<EOF
+config.version = "8"
+virtualHW.version = "13"
+memsize = "$VMMEMSIZE"
+displayName = "$NVM"
+guestOS = "$NVMOS"
+ide0:0.present = "TRUE"
+ide0:0.deviceType = "cdrom-raw"
+ide:0.startConnected = "false"
+floppy0.startConnected = "FALSE"
+floppy0.fileName = "/dev/fd0"
+ide0:0.fileName = "$ISO_FILE"
+Ethernet0.present = "TRUE"
+Ethernet0.networkName = "VM Network"
+Ethernet0.addressType = "static"
+Ethernet0.address = "$STATIC_IP"
+Ethernet0.netmask = "$NETMASK"
+Ethernet0.gateway = ""
+Ethernet0.dns = "$DNS_SERVER"
+scsi0.present = "true"
+scsi0.sharedBus = "none"
+scsi0.virtualDev = "lsilogic"
+scsi0:0.present = "true"
+scsi0:0.fileName = "$NVM.vmdk"
+scsi0:0.deviceType = "scsi-hardDisk"
+EOF
+
+# Register the virtual machine
+vim-cmd solo/registervm "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmx"
+////////////////////////////////////////
+
+
+
+#!/bin/sh
+
+NVM="openstack-vm"      
+NVMDIR="openstack-vm"  
+NVMOS="ubuntu-64"   
+NVMSIZE="60g"          
+VMMEMSIZE="8192"       
+STATIC_IP="192.168.58.90"
+NETMASK="255.255.255.0"
+DNS_SERVER="8.8.8.8"
+ISO_FILE="/vmfs/volumes/datastore1/ubuntu-22.04.2-desktop-amd64.iso"
+
+mkdir -p "/vmfs/volumes/datastore1/$NVMDIR"
+vmkfstools -c "$NVMSIZE" -d thin "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmdk"
+exec >"/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmx"
+cat <<EOF
+config.version = "8"
+virtualHW.version = "13"
+memsize = "$VMMEMSIZE"
+displayName = "$NVM"
+guestOS = "$NVMOS"
+ide0:0.present = "TRUE"
+ide0:0.deviceType = "cdrom-raw"
+ide:0.startConnected = "false"
+floppy0.startConnected = "FALSE"
+floppy0.fileName = "/dev/fd0"
+ide0:0.fileName = "$ISO_FILE"
+Ethernet0.present = "TRUE"
+Ethernet0.networkName = "VM Network"
+Ethernet0.addressType = "static"
+Ethernet0.address = "$STATIC_IP"
+Ethernet0.netmask = "$NETMASK"
+Ethernet0.dns = "$DNS_SERVER"
+scsi0.present = "true"
+scsi0.sharedBus = "none"
+scsi0.virtualDev = "lsilogic"
+scsi0:0.present = "true"
+scsi0:0.fileName = "$NVM.vmdk"
+scsi0:0.deviceType = "scsi-hardDisk"
+EOF
+///////////////////////////////////////////
+vim-cmd solo/registervm vmfs/volumes/646202d0-292bcbc8-4616-c4346b93d7a4/openstack-vm/openstack-vm.vmx
+
+
+
+
+
+//////////////////////
+esxcli hardware memory get | grep Physical | awk '{print $3/1024^3 " GB"}' command to check available RAM
+//////////////////
+https://www.blackmanticore.com/206da0c17840b37177b113a44d96e1c4
+////////////////////////
+ansible-playbook copy_script.yml ; a=`ansible openstack -m shell -a "vim-cmd vmsvc/getallvms" | grep openstack | cut -d " " -f 1` ; sleep 10 ; ansible openstack -m shell -a "vim-cmd vmsvc/power.on $a"
+
+//////////// processing the cfg file on the iso file
+-mount the file as follows :
+mkdir extraction
+sudo mount -o loop /path/to/the/downloaded/iso_file<.iso> /path/of/the/target/directory <extraction>
+-create the new direcory for the new iso
+mkdir installation
+-extract the content of the downloaded file in the new directory
+xorriso -osirrox on indev /path/of/the/downloaded_file --extract_boot_images /installation/bootpart -extract / installation
+-change the access mode of the /installation/boot/grub
+chmod 644 /installation/boot/grub
+-create a directory called preseed in installation
+mkdir /installation/preseed
+-place .seed file in it using config.cfg
+cp path/to/config.cfg /installation/preseed/server.seed
+-change the grub file with grub.cfg
+cat grub.cfg > /installation/boot/grub/grub.cfg
+-repack the directory to become the new iso
+
+research about cloud solutions
+
+//////////////////////////////////////////////////
+some commands
+0 ls
+   1 esxcli network ip route ipv4 add --gateway 192.168.58.60 0.0.0.0/0
+   2 ls /etc/
+   3 esxcli esxcli command list
+   4 ping 8.8.8.8
+   5 esxcfg-route
+   6 esxcfg-route 192.168.58.60
+   7 esxcfg-route
+   8 ping 8.8.8.8
+   9 \dsdasdqd
+  10 clear 
+  11 ping 8.8.8.8
+  12 esxcfg-route
+  13 ping 192.168.58.60
+  14 ping 8.8.8.8
+  15 clear 
+  16 ping 8.8.8.8
+  17 ping 172.16.20.22
+  18 ping 172.207.1.3
+  19 ping 172.16.20.24
+  20 ping 172.16.20.22
+  21 ping 8.8.8.8
+  22 vim-cmd vmsvc/getallvms
+  23 vim-cmd vmsvc/power.on 52
+  24 esxcli network ip interface list
+  25 esxcli network ip interface list | grep ip
+  26 vim-cmd vmsvc/get.guest 52
+  27 vim-cmd vmsvc/get.guest 52 | grep ipAddress
+  28 vim-cmd vmsvc/getallvms
+  29 vim-cmd vmsvc/destr
+  30 vim-cmd vmsvc/geta
+  31 vim-cmd vmsvc/power.on 54
+  32 esxcli network vswitch standard portgroup list 
+  33 esxcli network nic lsit
+  34 esxcli network nic list
+  35 esxcli network ip get
+  36 esxcli vmsvc/getallvms
+  37 vim-cmd vmsvc/getallvms
+  38 vim-cmd vmsvc/power.off 54
+  39 vim-cmd vmsvc/power.on 54
+  40 ping 192.168.58.240
+  41 ping 8.8.8.8
+  42 ssh cloud-admin@192.168.58.240
+  43 ping 192.168.58.240
+  44 vim-cmd vmsvc/power.off 54
+  45 vim-cmd vmsvc/power.on 54
+  46 ssh cloud-admin@192.168.58.240
+  47 history
+    48 esxcli vm network
+  49 esxcli network vm list
+  50 esxcli network vm 
+  51 esxcli network ip 
+  52 esxcli network ip connection
+  53 esxcli network ip connection list
+  54 clear 
+  55 history
+
+
+////////////////
+pip install openstacksdk
+
+
+
+
+
+
+

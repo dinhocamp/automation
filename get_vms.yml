@@ -1,15 +1,18 @@
 ---
 - name: Get all virtual machines
-  hosts: localhost
+  hosts: openstack
+  vars:
+    ansible_become_pass: root*2023
+  become: yes
+  become_method: sudo
+  become_user: root
   gather_facts: no
   tasks:
     - name: Gather VM information
       vmware_vm_info:
-        hostname: "{{ inventory_hostname }}"
-        delegate_to: localhost
+        hostname: localhost
         vm_type: vm
       register: vm_info
-
     - name: Display virtual machines
       debug:
         var: vm_info.virtual_machines

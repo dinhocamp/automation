@@ -4,9 +4,9 @@
   gather_facts: no
 
   vars:
-    ssh_username: cloud-admin
+    ssh_username: root
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
-    ansible_become_pass: openstack
+    ansible_become_pass: root*2023
 
   tasks:
     - name: Check connectivity
@@ -24,17 +24,17 @@
     - name: Create stack user
       become: yes
       become_method: sudo
-      remote_user: cloud_admin
+      remote_user: root
       ansible.builtin.user:
         name: stack
         state: present
     - name: Allow 'stack' user to have passwordless sudo access
       become: yes
       become_method: sudo
-      remote_user: cloud_admin
+      remote_user: root
       lineinfile:
         dest: /etc/sudoers
         state: present
         regexp: stack
-        line: "cloud-admin ALL=(ALL) NOPASSWD: ALL"
+        line: "stack ALL=(ALL) NOPASSWD: ALL"
 

@@ -1,0 +1,12 @@
+---
+- name: launch openstack virtual machine for the first time
+  hosts: openstack
+  become: yes
+  vars:
+    ssh_username: cloud-admin
+    ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
+    ansible_become_pass: root*2023
+  tasks:
+    - name: launch VM ...
+      ansible.builtin.shell:
+        cmd: "a=`vim-cmd vmsvc/getallvms | grep openstack-vm | cut -d " " -f 1` ; vim-cmd vmsvc/power.on $a ;" 

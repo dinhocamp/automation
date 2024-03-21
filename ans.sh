@@ -4,7 +4,7 @@ rm ./tmp.txt
 if test $check_ans -eq 1 
 then
 	echo ansible not installed yet
-	if test "$SUDO_USER" == "dinho" 
+	if test "$SUDO_USER" == "dinho" #Replace "dinho" with root user 
 	then
 		echo installing ansible
 		apt-get install ansible 2> error.txt
@@ -36,31 +36,59 @@ done
 if [ $a == 'y' ]
 then
 	echo "checking if openstack already installed ..."
-		check_ans=`dpkg -l | grep openstack | wc -l`
-		if test $check_ans -eq 0 
+		pass=`dpkg -l | grep -o sshpass | wc -l`
+		if test $pass -eq 0
 		then
-			unset check_ans
-			res=`ssh -o "StrictHostKeyChecking=no" cloud-admin@openstack "git --version" &>/dev/null | grep -o '\d+\.\d+\.\d+'`	
-			echo "result is "
-			if test "$res" == "" 
+			if test "$SUDO_USER" == "dinho" #Replace "dinho" with root user 
 			then
-			ssh -o "StrictHostKeyChecking=no" cloud-admin@openstack "sudo apt-get install git"
+				echo installing sshpass
+				apt-get install sshpass 2> error.txt
+				if test $? -eq 0
+				then
+					echo sshpass is installed successfully
+				else
+					echo problem installing sshpass
+					cat ./error.txt
+				fi
+			else
+				echo -e "your are not root\nexecute the script with sudo privileges"
+				exit 1
 			fi
-			check_ans=`find /home/dinho/.ssh -type f -name "id_rsa.pub" | grep -o 'No such file'`
-			if test "$check_ans" == "No such file"
+		else
+			echo sshpass is installed
+		fi
+		#check_ans=`dpkg -l | grep openstack | wc -l`
+		#if test $check_ans -eq 0 
+		#then
+			check=`find /home/dinho/.ssh -type f -name "id_rsa.pub" | grep -o "id_rsa.pub"`
+			echo "echoing to troubleshoot check variable is $check"
+			if test "$check" != "id_rsa.pub"
 			then
 			ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
-			ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub cloud-admin@openstack		
+			sshpass ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub root@openstack -p 'root*2023'
 			else
-			ansible-playbook -i inventory ssh_config.yml
-			ansible-playbook -i inventory create_stack_user.yml			
-			ansible-playbook -i inventory devstack_installation.yml
-			fi
-			#check for sshpass is already installed
+			ansible-playbook copy_script.yml  
+			a=`ansible openstack -m shell -a "vim-cmd vmsvc/getallvms" | grep openstack | cut -d " " -f 1`
+			sleep 10 
+			ansible openstack -m shell -a "vim-cmd vmsvc/power.on $a"
+			#vim-cmd vmsvc/getallvms | grep "openstack"
+			res=`ssh -o "StrictHostKeyChecking=no" root@openstack "git --version" &>/dev/null | grep -o '\d+\.\d+\.\d+'`	
 			#check if git is installed on the remote machine
-		else
-			echo openstack is installed
-		fi
+			if test "$res" == "" 
+			then
+			ssh -o "StrictHostKeyChecking=no" root@openstack "sudo apt-get install git"
+			fi
+			ansible-playbook -i inventory ssh_config.yml			
+			ansible-playbook -i inventory devstack_installation.yml
+			ansible-playbook -i inventory check_openstack_installation.yml
+			fi
+			unset check_ans
+			unset check
+			#Replace root@openstack with the the remote user@ip_address 
+			#check for sshpass is already installed on localhost
+		#else
+			#echo openstack is installed
+		#fi
 elif [ $a == 'n' ]
 then
 	echo aborting ...

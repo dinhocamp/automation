@@ -1,0 +1,28 @@
+---
+- name: Integrate configuration file into VM
+  hosts: openstack
+  gather_facts: no
+
+  vars:
+    esxi_host: "localhost"
+    esxi_username: "root"
+    esxi_password: "root*2023"
+    vm_name: "openstack-vm"
+    cfg_file: "/home/dinho/automation/config.cfg"
+
+  tasks:
+    - name: Integrate configuration file into VM
+      vmware_guest_customization:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_username }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        name: "{{ vm_name }}"
+        customization_spec:
+          hostname: "{{ vm_name }}"
+          dns_servers:
+            - "8.8.8.8"
+          time_zone: "UTC"
+          user_data: "{{ lookup('file', cfg_file) }}"
+      delegate_to: openstack
+

@@ -1,24 +1,30 @@
 ---
-- name: OpenStack vm static ip config
+- name: Set IP address for openstack-vm on ESXi host
   hosts: openstack
-  become: yes
-  become_method: sudo
   gather_facts: no
+
+  vars:
+    esxi_username: "root"
+    esxi_password: "root*2023"
+    vm_name: "openstack-vm"
+    new_ip_address: "192.168.58.240"
+    subnet_mask: "255.255.255.0"
+    dns_servers:
+      - "8.8.8.8"
+
   tasks:
-    - name: static ip address configuration
-      ansible.builtin.shell: |
-        cat << EOF > /etc/netplan/01-network-manager-all.yaml
-        network:
-          version: 2
-          renderer: networkd
-          ethernets:
-            ens33:
-              dhcp4: no
-              addresses: [192.168.1.100/24]
-              gateway4: 192.168.1.1
-              nameservers:
-                addresses: [8.8.8.8, 8.8.4.4]
-        EOF
-        netplan apply
+    - name: Set IP address for openstack-vm
+      community.vmware.vmware_vm_vmotion:
+        hostname: "openstack"
+        username: "{{ esxi_username }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        name: "{{ vm_name }}"
+        ip_settings:
+          ip: "{{ new_ip_address }}"
+          subnet_mask: "{{ subnet_mask }}"
+          dns_servers: "{{ dns_servers }}"
+        state: present
+
       
       
