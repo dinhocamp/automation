@@ -181,6 +181,10 @@ cat grub.cfg > /installation/boot/grub/grub.cfg
 research about cloud solutions
 
 //////////////////////////////////////////////////
+on linux machine enable routing through
+sudo sysctl net.ipv4.ip_forward=1
+
+//////////////////////////////////////////////////
 some commands
 0 ls
    1 esxcli network ip route ipv4 add --gateway 192.168.58.60 0.0.0.0/0

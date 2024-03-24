@@ -14,5 +14,4 @@ ansible_ssh_pass=root*2023
 [servers:vars]
 ansible_user=cloud-admin
 ansible_connection=ssh
-ansible_ssh_pass=openstack
 #ansible_ssh_private_key=~/.ssh/id_rsa.pub

@@ -2,11 +2,12 @@
 - name: Connect to remote machine via SSH with a specific username and password
   hosts: openstack
   gather_facts: no
-
+  vars_files:
+    - passwd.yml
   vars:
     ssh_username: root
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
-    ansible_become_pass: root*2023
+    ansible_become_pass: "{{ openstack }}"
 
   tasks:
     - name: Check connectivity

@@ -9,7 +9,6 @@ NETMASK="255.255.255.0"
 DNS_SERVER="8.8.8.8"
 ISO_FILE="/vmfs/volumes/datastore1/install_server.iso"
 MAC_ADDRESS="DE:AD:BE:A2:C1"
-PRESEED_FILE="/config.cfg"
 mkdir -p "/vmfs/volumes/datastore1/$NVMDIR"
 
 vmkfstools -c "$NVMSIZE" -d thin "/vmfs/volumes/datastore1/$NVMDIR/$NVM.vmdk"
@@ -109,6 +108,5 @@ usb:0.present="TRUE"
 usb:0.deviceType="hid"
 usb:0.port="0"
 usb:0.parent="-1"
-kernelopt="auto url=file://$PRESEED_FILE"
 EOF
 sleep 45

@@ -2,11 +2,12 @@
 - name: Integrate configuration file into VM
   hosts: openstack
   gather_facts: no
-
+  vars_files:
+    - passwd.yml
   vars:
     esxi_host: "localhost"
     esxi_username: "root"
-    esxi_password: "root*2023"
+    esxi_password: "{{ openstack }}"
     vm_name: "openstack-vm"
     cfg_file: "/home/dinho/automation/config.cfg"
 
@@ -15,7 +16,7 @@
       vmware_guest_customization:
         hostname: "{{ esxi_host }}"
         username: "{{ esxi_username }}"
-        password: "{{ esxi_password }}"
+        password: "{{ openstack }}"
         validate_certs: no
         name: "{{ vm_name }}"
         customization_spec:

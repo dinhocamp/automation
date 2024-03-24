@@ -1,8 +1,10 @@
 ---
 - name: Get all virtual machines
   hosts: openstack
+  vars_files:
+    - passwd.yml
   vars:
-    ansible_become_pass: root*2023
+    ansible_become_pass: "{{ openstack }}"
   become: yes
   become_method: sudo
   become_user: root

@@ -2,10 +2,11 @@
 - name: Set IP address for openstack-vm on ESXi host
   hosts: openstack
   gather_facts: no
-
+  vars_files:
+    - passwd.yml
   vars:
     esxi_username: "root"
-    esxi_password: "root*2023"
+    esxi_password: "{{ openstack }}"
     vm_name: "openstack-vm"
     new_ip_address: "192.168.58.240"
     subnet_mask: "255.255.255.0"

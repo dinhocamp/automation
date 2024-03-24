@@ -1,0 +1,10 @@
+---
+- name: Install openstacksdk on remote machine
+  hosts: openstack-vm
+  become: true
+  tasks:
+    - name: Install openstacksdk using pip
+      pip:
+        name: openstacksdk
+        state: present
+

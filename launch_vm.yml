@@ -2,10 +2,12 @@
 - name: launch openstack virtual machine for the first time
   hosts: openstack
   become: yes
+  vars_files:
+    - passwd.yml
   vars:
     ssh_username: cloud-admin
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
-    ansible_become_pass: root*2023
+    ansible_become_pass: "{{ openstack }}"
   tasks:
     - name: launch VM ...
       ansible.builtin.shell:
