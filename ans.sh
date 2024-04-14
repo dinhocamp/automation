@@ -65,7 +65,7 @@ then
 			if test "$check" != "id_rsa.pub"
 			then
 			ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
-			sshpass ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub root@openstack -p 'root*2023'
+			sshpass -p 'root*2023' ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub root@openstack
 			else
 			ansible-playbook copy_script.yml  
 			a=`ansible openstack -m shell -a "vim-cmd vmsvc/getallvms" | grep openstack | cut -d " " -f 1`

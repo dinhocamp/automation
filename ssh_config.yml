@@ -1,15 +1,29 @@
 ---
 - name: Connect to remote machine via SSH with a specific username and password
-  hosts: openstack
+  hosts: openstack-vm-test
   gather_facts: no
   vars_files:
-    - passwd.yml
+    - /home/dinho/test/automation/passwd.yml
   vars:
-    ssh_username: root
+    ssh_username: cloud-admin
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
-    ansible_become_pass: "{{ openstack }}"
+    ansible_become_pass: "{{ openstack_vm }}"
 
   tasks:
+    - name: allow ssh_key based auth
+      ansible.builtin.shell:
+        cmd: "/usr/bin/sshpass -p {{ openstack_vm }} ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub -o StrictHostKeyChecking=no {{ ssh_username }}@openstack-vm-test"
+      ignore_errors: true
+      register: ssh_copy_check
+      delegate_to: localhost
+    - name: checking ssh-copy output
+      ansible.builtin.debug:
+        msg: "ssh-copy command output {{ ssh_copy_check.failed }}"
+    - name: exectute ssh 
+      ansible.builtin.shell:
+        cmd: ssh-keygen -f "/home/dinho/.ssh/known_hosts" -R "openstack-vm-test"
+      when: ssh_copy_check.failed
+      delegate_to: localhost
     - name: Check connectivity
       ansible.builtin.ping:
       delegate_to: localhost
@@ -18,17 +32,6 @@
       ansible.builtin.shell:
         cmd: pwd
       register: command_output
-
-    - name: Display command output
-      ansible.builtin.debug:
-        var: command_output.stdout
-    - name: Create stack user
-      become: yes
-      become_method: sudo
-      remote_user: root
-      ansible.builtin.user:
-        name: stack
-        state: present
     - name: Allow 'stack' user to have passwordless sudo access
       become: yes
       become_method: sudo
@@ -36,6 +39,5 @@
       lineinfile:
         dest: /etc/sudoers
         state: present
-        regexp: stack
-        line: "stack ALL=(ALL) NOPASSWD: ALL"
-
+        regexp: cloud-admin
+        line: "cloud-admin ALL=(ALL) NOPASSWD: ALL"

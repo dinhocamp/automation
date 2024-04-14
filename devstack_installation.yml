@@ -2,12 +2,14 @@
 - name: Add user 'stack' with root privs and install openstack via devstack
   hosts: openstack-vm
   become: yes
-  become_user: root
+  become_user: cloud-admin
   tasks:
     - name: Clone openstack repo
-      ansible.builtin.shell: 'git clone https://github.com/openstack/devstack.git /devstack'
+      ansible.builtin.shell: 
+        cmd: 'git clone https://github.com/openstack/devstack.git /devstack'
     - name: Execute shell script
-      ansible.builtin.shell: 'bash /devstack/stack.sh'
+      ansible.builtin.shell: 
+        cmd: 'bash /devstack/stack.sh'
     - name: Debug ansible_become_pass
       ansible.builtin.debug:
         msg: "ansible_become_pass is root"

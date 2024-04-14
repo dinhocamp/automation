@@ -1,0 +1,12 @@
+---
+- name: Create OpenStack project
+  hosts: openstack-vm
+  become: yes
+  become_user: cloud-admin
+  tasks:
+    - name: Create project
+      os_project:
+        cloud: myopenstack
+        state: present
+        name: test_project
+        description: "testing openstack"

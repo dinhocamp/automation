@@ -1,0 +1,13 @@
+---
+- name: Check SSH authentication method
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Check if SSH key-based auth is configured
+      ansible.builtin.shell:
+        cmd: "ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no cloud-admin@openstack-vm-test 'exit'"
+      register: auth_method_result
+      ignore_errors: true
+    - name: Output authentication method
+      ansible.builtin.debug:
+        msg: "SSH key-based authentication is {{ auth_method_result.failed }}."

@@ -5,11 +5,18 @@ do
 	echo -e "enter 1 to install ubuntu desktop or enter 2 for ubuntu server ..."
 	read a
 done
-if [ $a == '1' ]
+if test "$SUDO_USER" == "dinho" #Replace "dinho" with root user 
 then
-echo "preparing ubuntu desktop iso file ..."
-bash prepare_iso_desktop.sh
+	if [ $a == '1' ]
+	then
+		echo "preparing ubuntu desktop iso file ..."
+		bash prepare_iso_desktop.sh
+	else
+		echo "preparing ubuntu server iso file ..."
+		bash prepare_iso_server.sh
+	fi
 else
-echo "preparing ubuntu server iso file ..."
-bash prepare_iso_server.sh
+	echo -e "your are not root\nexecute the script with sudo privileges"
+	exit 1
 fi
+

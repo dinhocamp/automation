@@ -2,7 +2,7 @@
 autoinstall:
   version: 1
   identity:
-    hostname: openstack-vm-test
+    hostname: machine_name
     password: "$6$cwrYCFwEYRxT1qnO$7uRAiN6sQnH2Z.7.jNkOxn8p/aO2N.6JWKIl8Un8T.TczOHaw5MFQnA/ublY/e1nISj6Yuht7tfByVwrCv9411"
     username: cloud-admin
   kernel: 
@@ -16,7 +16,7 @@ autoinstall:
     allow-pw: true
     install-server: true
     authorized-keys:
-      - "ssh-rsa "
+      - ssh_key
   timezone: UTC
   packages:
     - openssh-server
@@ -28,9 +28,9 @@ autoinstall:
           match:
             name: en*
           addresses:
-            - 10.10.17.245/24
+            - adr
           dhcp4: false
-          gateway4: 10.10.17.254
+          gateway4: gtw
           nameservers:
             addresses:
               - 8.8.8.8
