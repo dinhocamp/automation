@@ -1,0 +1,27 @@
+---
+- name: List OpenStack Users
+  hosts: openstack-vm-test
+  vars_files:
+    - ../clouds.yaml
+  #gather_facts: no
+  tasks:
+    - name: debbugging clouod variables
+      debug: 
+        var: clouds.openstack.auth.username
+      delegate_to: localhost
+    - name: Fetch all disabled projects
+      openstack.cloud.project_info:
+        cloud: awesomecloud
+        name: demoproject
+        domain: admindomain
+      ignore_errors: true
+    - name: List OpenStack Users
+      os_user:
+        name: clouds.openstack.auth.username 
+        cloud: "{{ clouds.openstack.auth.project_name }}"
+      register: openstack_users
+
+    - name: Display OpenStack Users
+      debug:	
+        var: openstack_users
+

@@ -3,14 +3,14 @@
   hosts: openstack-vm-test
   gather_facts: no
   vars_files:
-    - /home/dinho/test/automation/passwd.yml
+    - /home/dinho/automation/passwd.yml
   vars:
-    ssh_username: cloud-admin
+    ssh_username: stack
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
     ansible_become_pass: "{{ openstack_vm }}"
-
+    ansible_ssh_pass: "{{ openstack_vm }}"
   tasks:
-    - name: allow ssh_key based auth
+    - name: allow ssh_key for stack
       ansible.builtin.shell:
         cmd: "/usr/bin/sshpass -p {{ openstack_vm }} ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub -o StrictHostKeyChecking=no {{ ssh_username }}@openstack-vm-test"
       ignore_errors: true
@@ -19,25 +19,28 @@
     - name: checking ssh-copy output
       ansible.builtin.debug:
         msg: "ssh-copy command output {{ ssh_copy_check.failed }}"
-    - name: exectute ssh 
+    - name: exectute ssh
       ansible.builtin.shell:
         cmd: ssh-keygen -f "/home/dinho/.ssh/known_hosts" -R "openstack-vm-test"
-      when: ssh_copy_check.failed
+      when: ssh_copy_check.failed == True
+      delegate_to: localhost
+      #register: ssh_copy_check
+    - name: allow ssh_key based auth
+      ansible.builtin.shell:
+        cmd: "/usr/bin/sshpass -p {{ openstack_vm }} ssh-copy-id -i /home/dinho/.ssh/id_rsa.pub -o StrictHostKeyChecking=no {{ ssh_username }}@openstack-vm-test"
+      ignore_errors: true
+      when: ssh_copy_check.failed != "False"
+      register: ssh_copy_check
       delegate_to: localhost
     - name: Check connectivity
       ansible.builtin.ping:
       delegate_to: localhost
-      become: no
-    - name: Run command
-      ansible.builtin.shell:
-        cmd: pwd
-      register: command_output
     - name: Allow 'stack' user to have passwordless sudo access
       become: yes
       become_method: sudo
-      remote_user: root
+      remote_user: stack
       lineinfile:
         dest: /etc/sudoers
         state: present
-        regexp: cloud-admin
-        line: "cloud-admin ALL=(ALL) NOPASSWD: ALL"
+        regexp: stack
+        line: "stack ALL=(ALL) NOPASSWD: ALL"

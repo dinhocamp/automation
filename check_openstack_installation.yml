@@ -15,10 +15,6 @@
       debug:
         msg: openstack is installed
       when: check.stdout
-    - name: installing openstack
-      debug:
-        msg: openstack is not installed
-      when: not check 
 
 
   

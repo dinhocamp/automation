@@ -4,7 +4,7 @@ rm ./tmp.txt
 if test $check_ans -eq 1 
 then
 	echo ansible not installed yet
-	if test "$SUDO_USER" == "dinho" #Replace "dinho" with root user 
+	if test "$SUDO_USER" == "dinho"
 	then
 		echo installing ansible
 		apt-get install ansible 2> error.txt
@@ -26,4 +26,12 @@ else
 	echo $version
 fi
 unset check_ans
-
+echo Enter the ip address relative to the ESXI host machine
+read a
+b=`cat /etc/hosts | grep -o openstack$`
+if test  "$b" == 'openstack' 
+then
+sed -i "s/openstack/$a openstack/g" /etc/hosts 	
+else
+	echo "$a openstack" >> /etc/hosts
+fi

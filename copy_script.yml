@@ -6,21 +6,19 @@
     - passwd.yml
   vars:
     ssh_username: root
-    ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
-    #ansible_become_pass:
+    ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa
     ansible_become_pass: "{{ openstack }}"
   tasks:
     - name: Copy script to the host machine
       ansible.builtin.copy:
-        src: /home/dinho/automation/create_vm.sh 
+        src: /home/dinho/test/automation/create_vm.sh 
         dest: /create_vm.sh  
         owner: root  
         group: root  
-        mode: 0755 
+        mode: 0755
     - name: Execute script
       ansible.builtin.shell:
         cmd: "sh create_vm.sh"
     - name: register the machine
       ansible.builtin.shell:
-        cmd: "vim-cmd solo/registervm '/vmfs/volumes/646202d0-292bcbc8-4616-c4346b93d7a4/openstack-vm/openstack-vm.vmx'"   
-
+        cmd: "vim-cmd solo/registervm '/vmfs/volumes/646202d0-292bcbc8-4616-c4346b93d7a4/openstack-vm-test/openstack-vm-test.vmx'"   

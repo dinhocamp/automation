@@ -4,7 +4,7 @@ autoinstall:
   identity:
     hostname: openstack-vm-test
     password: "$6$cwrYCFwEYRxT1qnO$7uRAiN6sQnH2Z.7.jNkOxn8p/aO2N.6JWKIl8Un8T.TczOHaw5MFQnA/ublY/e1nISj6Yuht7tfByVwrCv9411"
-    username: cloud-admin
+    username: stack
   kernel: 
     package: linux-generic
   keyboard: 
@@ -16,7 +16,7 @@ autoinstall:
     allow-pw: true
     install-server: true
     authorized-keys:
-      - "ssh-rsa "
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDP/IoMB6qCAHwB3BaMnBse8RhnwmYTvvBO4JJxzYm1+AcrN1FfxkD8QOJ8kFI8PPpsqQfKtDwz9WEW71JKYRzqA1eIsOQKYIPEL78ywbUPbGyBMt7v8fs5Q322FxWQGKNr9EJKgTLxc0P3UBKGFL8+v9qIi6pP+naoIlkqgSwBACojIUd0CfMsbQNz0l62AUiTeYnGmStR1j61xiBsUE/o/1BDHLqyxpChoZ0FB4AdE7QCDHVNlGXBdX43YhjgdqqxGi5MbU8EnBkod2tji2a4uqSKt8y95z77IWu4MyHTfTEfKObmHzS6dpS/BV6S/qHF9Tpx+1at+exHIipm/JZSt3R3cI/mEmPBp91i/0mUKDIbrS0/2btV2KSsLhqHJKDJAradfsAWVgjSrXvzflXySZXxG3XJs4nk4wRuUEHi30DgUX9CzMA3MVeoq1LBoUkK7Ro88r4Hct862TgJs+ltKxJTJO3q+PG606H1CRuIN4eh/dkqXYkHcCUe5P7p6gc="
   timezone: UTC
   packages:
     - openssh-server
@@ -28,9 +28,9 @@ autoinstall:
           match:
             name: en*
           addresses:
-            - 10.10.17.245/24
+            - 192.168.1.120/24
           dhcp4: false
-          gateway4: 10.10.17.254
+          gateway4: 192.168.1.1
           nameservers:
             addresses:
               - 8.8.8.8

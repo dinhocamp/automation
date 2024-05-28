@@ -2,9 +2,9 @@
 autoinstall:
   version: 1
   identity:
-    hostname: machine_name
+    hostname: OpenStack-vm
     password: "$6$cwrYCFwEYRxT1qnO$7uRAiN6sQnH2Z.7.jNkOxn8p/aO2N.6JWKIl8Un8T.TczOHaw5MFQnA/ublY/e1nISj6Yuht7tfByVwrCv9411"
-    username: stack
+    username: cloud-admin
   kernel: 
     package: linux-generic
   keyboard: 
@@ -34,13 +34,10 @@ autoinstall:
           nameservers:
             addresses:
               - 8.8.8.8
-  ssh:
-        install-server: yes
-        allow-pw: yes
   late-commands:
-    - sudo sed -i 's/^#*[[:space:]]*^PermitRootLogin/PermitRootLogin yes/g' /etc/ssh/sshd_config
-    - sudo sed -i 's/^#*[[:space:]]*^PasswordAuthentication/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-    - sudo sed -i 's/^#*[[:space:]]*Port 22/Port 22/g' /etc/ssh/sshd_config
-    - sudo systemctl restart sshd
-    - sudo systemctl restart ssh
+    - echo 'PermitRootLogin yes' >> /etc/ssh/ssh_config
+    - echo 'PasswordAuthentication yes' >> /etc/ssh/ssh_config
+    - echo 'Port 22' >> /etc/ssh/ssh_config
+    - umount -l /cdrom
+    - systemctl restart ssh
   reboot: true

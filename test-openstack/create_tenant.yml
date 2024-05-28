@@ -1,12 +1,16 @@
 ---
-- name: Create OpenStack project
-  hosts: openstack-vm
-  become: yes
-  become_user: cloud-admin
+- name: List OpenStack Security Groups
+  hosts: openstack-vm-test
+  become: true
+  become_method: sudo
+  become_user: stack
   tasks:
-    - name: Create project
-      os_project:
-        cloud: myopenstack
-        state: present
-        name: test_project
-        description: "testing openstack"
+    - name: Gather OpenStack security groups
+      ansible.builtin.shell:
+        cmd: 'openstack --os-username=admin --os-password=secret --os-project-name=demo --os-auth-url=http://10.10.17.245/identity --os-project-domain-name=default --os-user-domain-name=default security group list'
+      register: os_security_groups
+
+    - name: Display security groups
+      debug:
+        msg: "{{ os_security_groups }}"
+

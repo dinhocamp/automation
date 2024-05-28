@@ -1,0 +1,78 @@
+---
+- name: Deploy OpenStack
+  hosts: openstack-vm-test
+  become: yes
+  vars:
+    openstack_user: admin
+    openstack_password: admin_pass
+    openstack_tenant: admin
+    openstack_auth_url: http://openstack-vm-test/identity/v3
+    openstack_region: RegionOne
+    keystone_endpoint: "http://openstack-vm-test:5000/v3"
+    keystone_default_role: "user"
+    keystone_default_domain: "Default"
+    keystone_default_domain_id: "default"
+    horizon_config_file: "/etc/openstack-dashboard/local_settings.py"
+
+  tasks:
+    - name: Install MySQL
+      include_role:
+        name: geerlingguy.mysql
+      vars:
+        mysql_root_password: "{{ openstack_password }}"
+        mysql_databases:
+          - name: keystone
+        mysql_users:
+          - name: keystone
+            password: "{{ openstack_password }}"
+            priv: '*.*:ALL'
+            host: '%'
+
+    - name: Install RabbitMQ
+      include_role:
+        name: geerlingguy.rabbitmq
+
+    - name: Create OpenStack user and project
+      include_role:
+        name: openstack.cloud
+      vars:
+        cloud_auth:
+          auth_url: "{{ openstack_auth_url }}"
+          username: "{{ openstack_user }}"
+          password: "{{ openstack_password }}"
+          project_name: "{{ openstack_tenant }}"
+          project_domain_name: "Default"
+          user_domain_name: "Default"
+        cloud_region_name: "{{ openstack_region }}"
+        cloud_service: "identity"
+        cloud_endpoint: "http://controller_ip/identity/v3"
+
+    # Add tasks for installing and configuring other OpenStack services like Keystone, Glance, Nova, Neutron, etc.
+    - name: Configure Horizon to use Keystone
+      hosts: horizon_server
+      become: yes
+      vars:
+        keystone_endpoint: "http://controller_ip:5000/v3"  # Replace with your Keystone endpoint
+        keystone_default_role: "user"
+    	keystone_default_domain: "Default"
+    	keystone_default_domain_id: "default"
+    	horizon_config_file: "/etc/openstack-dashboard/local_settings.py"
+    - name: Update Horizon configuration
+      lineinfile:
+        path: "{{ horizon_config_file }}"
+        regexp: "^#? *(OPENSTACK_KEYSTONE_URL|OPENSTACK_KEYSTONE_DEFAULT_ROLE|OPENSTACK_KEYSTONE_DEFAULT_DOMAIN|OPENSTACK_KEYSTONE_DEFAULT_DOMAIN_ID)"
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "OPENSTACK_KEYSTONE_URL = '{{ keystone_endpoint }}'"
+        - "OPENSTACK_KEYSTONE_DEFAULT_ROLE = '{{ keystone_default_role }}'"
+        - "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '{{ keystone_default_domain }}'"
+        - "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN_ID = '{{ keystone_default_domain_id }}'"
+      notify: Restart Apache
+    
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+

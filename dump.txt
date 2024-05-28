@@ -247,8 +247,84 @@ some commands
 ////////////////
 pip install openstacksdk
 
+//////////////////////////////////////////
+0 vim-cmd vmsvc/getallvms
+   1 vim-cmd vmsvc/power.on 54
+   2 vim-cmd vmsvc/getallvms
+   3 vim-cmd vmsvc/destroy 75
+   4 lsof 
+   5 lsof /vmfs/volumes/datastore1/install_server.iso
+   6 lsof /var/log/kern.log
+   7 clear 
+   8 esxcfg-route
+   9 esxcli network nic list
+  10 esxcli network ip connection list
+  11 esxcli network ip interface ipv4 set --interface-name=vmk0 --ipv4= --netmask=NETMASK --type=static
+  12 esxcli network ip interface ipv4 get
+  13 esxcli network ip interface ipv4 set --interface-name=vmk1 --ipv4=10.10.17.100 --netmask=255.255.255.0 --type=static
+  14 esxcli network ip interface ipv4 get
+  15 esxcli network ip route ipv4 add --gateway=<gateway_IP> --network=<vmk1_network> --interface-name=vmk1
+  16 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network=10.10.17.0 --interface-name=vmk1
+  17 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network=10.10.17.0 
+  18 esxcli network ip route ipv4 add --gateway 10.10.17.254 10.10.17.0
+  19 esxcli network ip route ipv4 add --gateway 10.10.17.254 --network=10.10.17.0
+  20 esxcli network ip route ipv4 add --gateway 10.10.17.254 --network='10.10.17.0/24'
+  21 esxcli network ip route ipv4 get
+  22 esxcli network ip interface ipv4 get
+  23 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network=10.10.17.0 --network=vmk1
+  24 esxcli network ip interface ipv4 get
+  25 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network=10.10.17.0 --network='10.10.17.0/24'
+  26 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network='10.10.17.0/24'
+  27 esxcli network ip route ipv4 del
+  28 esxcli network ip route ipv4 ?
+  29 esxcli network ip route ipv4 
+  30 esxcli network ip route ipv4 remove
+  31 esxcli network ip route ipv4 remove --network='10.10.17'
+  32 esxcli network ip route ipv4 remove --network='10.10.17.0/24'
+  33 esxcli network ip interface ipv4 get
+  34 esxcli network ip route ipv4 add 
+  35 esxcli network ip route ipv4 add --gateway=10.10.17.254 --network='10.10.17.0/24'
+  36 esxcli network ip route ipv4 add 
+  37 esxcli network ip route ipv4 
+  38 esxcli network ip route ipv4 list
+  39 esxcli network ip route ipv4 
+  40 esxcli network ip route ipv4 add 
+  41 esxcli network ip route ipv4 add --network='10.10.17.0/24' --gateway='10.10.17.254'
+  42 esxcli network ip route ipv4 list
+  43 esxcli network ip route ipv4 remove --network=10.10.17.0/24 --interface-name=<existing_route_interface>
+  44 esxcli network ip route ipv4 remove --network=10.10.17.0/24
+  45 esxcli network ip route ipv4 remove --network='10.10.17.0/24'
+  46 esxcli network ip netstack list
+  47 esxcli network ip netstack
+  48 esxcli network ip netstack get
+  49 esxcli network ip netstack get defaultTcpipStack
+  50 esxcli network ip netstack
+  51 esxcli network ip netstack ge
+  52 esxcli network ip netstack get --netstack='defaultTcpipStack'
+  53 esxcli network ip route ipv4 add --network=<vmk1_network> --gateway=<gateway_IP>
+  54 esxcli network ip route ipv4 add --network='10.10.17.0/24' --gateway=10.10.17.254
+  55 esxcli network ip route ipv4 remove --network='10.10.17.0/24' --gateway=10.10.17.254
+  56 esxcli network ip route ipv4 remove --network='10.10.17.0/24' --gateway='10.10.17.254'
+  57 esxcli network ip interface ipv4 set --gateway=''
+  58 esxcli network interface
+  59 esxcli network ip interface 
+  60 esxcli network ip interface ipv4
+  61 esxcli network ip interface ipv4 get
+  62 esxcli network ip interface ipv4 set
+  63 esxcli network ip interface ipv4 get --gateway='10.10.17.254' --interface-name='vmk1'
+  64 esxcli network ip interface ipv4 set --gateway='10.10.17.254' --interface-name='vmk1'
+  65 esxcli network ip interface ipv4 set --ipv4='' --gateway='10.10.17.254' --interface-name='vmk1' --type=static
+  66 esxcli network ip interface ipv4 set --ipv4='10.10.17.100' --netmask='255.255.255.0' --gateway='10.10.17.254' --interface-name='vmk1' --type=static
+  67 esxcli network ip interface get
+  68 esxcli network ip interface ipv4 get
+  69 ping 10.10.17.254
+  70 ping 8.8.8.8
+  71 ping 10.10.17.254
+  72 history
+esxcli network ip interface ipv4 get
 
 
+esxcli network ip interface ipv4 get
 
 
 

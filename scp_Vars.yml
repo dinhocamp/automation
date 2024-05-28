@@ -1,0 +1,29 @@
+---
+- name: setting env variables
+  hosts: openstack-vm-test
+  become: true
+  become_method: sudo
+  become_user: stack
+  tasks:
+    - name: Copy script to the host machine
+      ansible.builtin.copy:
+        src: /home/dinho/automation/test.sh 
+        dest: /home/stack/devstack/testing_vars.sh  
+        owner: stack  
+        group: stack  
+        mode: 0755
+    - name: setting env variables
+      ansible.builtin.shell:
+        cmd: bash /home/stack/devstack/testing_vars.sh
+      register: script_output
+
+    - name: Display script output
+      debug:
+        var: script_output
+    - name: testing variable name 
+      ansible.builtin.shell:
+        cmd: "echo $OS_USERNAME"
+      register: os_name
+    - name: display OS_PROJECT_NAME var value 
+      debug:
+        msg: "the OS_PROJECT_NAME is {{ os_name.stdout }}"   

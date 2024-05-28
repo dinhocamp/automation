@@ -5,7 +5,7 @@
   vars_files:
     - passwd.yml
   vars:
-    ssh_username: cloud-admin
+    ssh_username: root
     ansible_ssh_private_key_file: /home/dinho/.ssh/id_rsa.pub
     ansible_become_pass: "{{ openstack }}"
   tasks:

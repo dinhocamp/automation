@@ -3,9 +3,9 @@ ansible_engine
 ansible_host=localhost
 [servers]
 openstack-vm ansible_host=192.168.58.240
-openstack-vm-test ansible_host=10.10.17.245 ansible_python_interpreter=/usr/bin/python3
+openstack-vm-test ansible_host=192.168.1.120 ansible_python_interpreter=/usr/bin/python3
 [host_server]
-openstack ansible_host=192.168.58.10
+openstack ansible_host=10.10.20.222 
 [host_server:vars]
 ansible_user=root
 ansible_connection=ssh
@@ -13,7 +13,7 @@ ansible_ssh_pass=root*2023
 #ansible_ssh_private_key=/home/dinho/.ssh/id_rsa.pub
 #inventory_hostname=localhost
 [servers:vars]
-ansible_user=cloud-admin
+ansible_user=stack
 ansible_connection=ssh
 ansible_ssh_private_key=/home/dinho/.ssh/id_rsa.pub
 [remotes:children]

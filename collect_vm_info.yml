@@ -9,8 +9,7 @@
         hostname: localhost.localdomain
         become: true
         password: "{{ openstack }}"
-        vm_name: Ansible
-        delegate_to: 192.168.58.30
+        vm_name: openstack-vm-test
       register: vm_info
 
     - name: Display gathered information
